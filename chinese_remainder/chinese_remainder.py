@@ -2,31 +2,33 @@
 import functools
 
 
-# Euclidean extended algorithm
-def extended_euclidean(a, b):
+def extended_gcd(a, b):
     if a == 0:
         return b, 0, 1
-    else:
-        d, x, y = extended_euclidean(b % a, a)
-        return d, y - (b // a) * x, x
+
+    gcd, x1, y1 = extended_gcd(b % a, a)
+
+    x = y1 - b / a * x1
+    y = x1
+    return gcd, x, y
 
 
 def chinese_remainder(a, n):
     modulus = functools.reduce(lambda x, y: x * y, n)
-    multipliers = []
-    for n_i in n:
+    sum = 0
+
+    for n_i, a_i in zip(n, a):
         N = modulus / n_i
-        gcd, inverse, y = extended_euclidean(N, n_i)
-        multipliers.append(inverse * N % modulus)
+        gcd, u_i, y = extended_gcd(N, n_i)
+        sum += (u_i * N % modulus) * a_i
 
-    result = 0
-    for multi, a_i in zip(multipliers, a):
-        result += multi * a_i
-    return result % modulus
+    print(str(sum) + " ≅ x mod " + str(modulus))
+
+    return sum % modulus
 
 
-n = [7, 6, 5]
-a = [6, 2, 0]
+n = [5, 6, 7]
+a = [3, 2, 4]
 
 for i in range(3):
     print("x ≅ " + str(a[i]) + " mod " + str(n[i]))
