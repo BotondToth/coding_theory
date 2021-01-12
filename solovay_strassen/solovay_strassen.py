@@ -1,4 +1,5 @@
 from random import random
+from jacobi import Jacobi
 
 
 def lnko(a, b):
@@ -9,27 +10,6 @@ def lnko(a, b):
     return a
 
 
-def jacobi(a, n):
-    if lnko(a, n) != 1: return 0
-    assert (n > a > 0 and n % 2 == 1)
-    a %= n
-    result = 1
-    while a != 0:
-        while a % 2 == 0:
-            a /= 2
-            n_mod_8 = n % 8
-            if n_mod_8 in (3, 5):
-                result = -result
-        a, n = n, a
-        if a % 4 == 3 and n % 4 == 3:
-            result = -result
-        a %= n
-    if n == 1:
-        return result
-    else:
-        return 0
-
-
 def solovey_strassen(n, k=10):
     if n == 2:
         return True
@@ -37,15 +17,40 @@ def solovey_strassen(n, k=10):
     if n % 2 == 0:
         return False
 
-    kitevo = (n - 1) / 2
+    exp = (n - 1) / 2
 
     for i in range(k):
         a = int(random() * (n - 1)) + 1
 
-        x = jacobi(a, n)
+        x = Jacobi(a, n).calculate() % n
 
-        y = (a ** kitevo) % n
-        if y % n != x % n: return False
+        y = pow(a, exp) % n
+        if x != y:
+            return False
+
+    return True
+
+
+def solovey_strassen_slow(n):
+    if n == 2:
+        return True
+
+    if n % 2 == 0:
+        return False
+
+    exp = (n - 1) / 2
+
+    A = []
+    for i in range(1, n-1):
+        if lnko(i, n) == 1:
+            A.append(i)
+
+    for a in A:
+        x = Jacobi(a, n).calculate() % n
+
+        y = pow(a, exp) % n
+        if x != y:
+            return False
 
     return True
 
@@ -54,3 +59,11 @@ print(solovey_strassen(5, 5))
 print(solovey_strassen(6, 5))
 print(solovey_strassen(71483, 5))
 print(solovey_strassen(2111309, 5))
+
+""" --------------------------------- """
+
+#print(solovey_strassen_slow(5))
+#print(solovey_strassen_slow(6))
+#print(solovey_strassen_slow(71483))
+
+""" --------------------------------- """

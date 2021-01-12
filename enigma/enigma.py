@@ -24,10 +24,11 @@ class Enigma:
         # forditott abc
         self.reflector = [let for let in reversed(self.alphabet)]
 
-    """ Fordit a rotorokon a szabaly szerint:
-        1. Alfa rotort tekerjuk
-        2. Ha alfa korbeert, beta rotort tekerjuk, alfat alaphelyzetbe allitjuk
-        3. Ha beta korbeert, gammat tekerjuk (ilyenkor betat is kell!)
+    """ 
+        Fordit a rotorokon a szabaly szerint:
+            1. Alfa rotort tekerjuk
+            2. Ha alfa korbeert, beta rotort tekerjuk, alfat alaphelyzetbe allitjuk
+            3. Ha beta korbeert, gammat tekerjuk (ilyenkor betat is kell!)
     """
     def rotate(self):
         self.alpha += 1
@@ -35,11 +36,12 @@ class Enigma:
             self.beta += 1
             self.alpha = 0
         if self.beta % len(self.alphabet) == 0:
-            # and self.alpha % len(self.alphabet) != 0 and self.beta >= len(self.alphabet) - 1
             self.gamma += 1
             self.beta = 1
 
-    """ Parameterben kapott rotor abc-t permutalja """
+    """
+        Kap egy rotor poziciot = x, az abc utolso x betujet az a lista elejere helyezi - 'forgat'
+    """
     def permutate_rotor(self, rotor):
         altered_alphabet = list(''.join(self.alphabet))
         for i in range(rotor):
@@ -47,7 +49,9 @@ class Enigma:
             altered_alphabet.pop()
         return altered_alphabet
 
-    """ Parameterben kapott rotor abc-t hatrafele permutalja """
+    """
+        Kap egy rotor poziciot = x, az abc elso x betujet az a lista vegere helyezi - 'hatrafele forgat'
+    """
     def inverse_permutate_rotor(self, rotor):
         altered_alphabet = list(''.join(self.alphabet))
         for i in range(rotor):
@@ -67,7 +71,6 @@ class Enigma:
     def encrypt_text(self, text):
         encrypted_text = []
         text = text.lower()
-        text.split()
         # Betunkent titkositjuk a szoveget
         for letter in text:
             if letter in self.steckerbrett:
